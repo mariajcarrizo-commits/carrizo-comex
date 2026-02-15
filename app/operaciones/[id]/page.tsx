@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react' // <--- Agregamos useRef
 import { useParams } from 'next/navigation'
 import Navbar from '../../components/Navbar'
 
@@ -12,17 +12,18 @@ export default function DetalleOperacion() {
   const [mostrarCalculadora, setMostrarCalculadora] = useState(false)
   const [mostrarPresupuesto, setMostrarPresupuesto] = useState(false)
   
+  // Estados Calculadora
   const [valoresCalc, setValoresCalc] = useState({ 
     fob: '', flete: '', seguro: '',
     porcentajeDerechos: '35', porcentajeTasa: '3', porcentajeIva: '21', tipoCambio: '1045'
   })
   const [resultadoCalc, setResultadoCalc] = useState<any>(null)
-  
-  // ESTADOS PARA SUBIDA REAL
+
+  // --- NUEVO: ESTADOS PARA SUBIDA REAL ---
+  const fileInputRef = useRef<HTMLInputElement>(null) // Referencia al selector de archivos
+  const [tipoDocActual, setTipoDocActual] = useState('') // Para saber qué botón tocaste
   const [subiendo, setSubiendo] = useState(false)
   const [progresoCarga, setProgresoCarga] = useState(0)
-  const [tipoDocActual, setTipoDocActual] = useState('') // Para saber qué botón tocaste
-  const fileInputRef = useRef<HTMLInputElement>(null) // Referencia al input oculto
 
   useEffect(() => {
     try {
@@ -68,6 +69,70 @@ export default function DetalleOperacion() {
     }
   }
 
+  // --- NUEVA FUNCIÓN: INICIAR CARGA REAL ---
+  const abrirSelectorArchivos = (tipo: string) => {
+      setTipoDocActual(tipo)
+      // Esto hace "clic" automáticamente en el input oculto
+      if (fileInputRef.current) {
+          fileInputRef.current.click()
+      }
+  }
+
+  // --- NUEVA FUNCIÓN: PROCESAR EL ARCHIVO SELECCIONADO ---
+  const procesarArchivoReal = (event: any) => {
+      const archivo = event.target.files[0]
+      if (!archivo) return
+
+      setSubiendo(true)
+      setProgresoCarga(0)
+
+      // Simulamos visualmente la carga, pero usamos el NOMBRE REAL del archivo
+      const intervalo = setInterval(() => {
+          setProgresoCarga((prev) => {
+              if (prev >= 100) {
+                  clearInterval(intervalo)
+                  return 100
+              }
+              return prev + 25
+          })
+      }, 100)
+
+      setTimeout(() => {
+          const nuevoDoc = {
+              id: Date.now(),
+              nombre: archivo.name, // <--- AQUÍ GUARDAMOS EL NOMBRE REAL (ej: factura_paveco.pdf)
+              tipo: tipoDocActual,
+              fecha: new Date().toLocaleDateString(),
+              usuario: 'Majo'
+          }
+          
+          const nuevosDocs = [...(operacion.documentos || []), nuevoDoc]
+          const opActualizada = { ...operacion, documentos: nuevosDocs }
+          
+          const ops = JSON.parse(localStorage.getItem('operaciones') || '[]')
+          const index = ops.findIndex((o:any) => o.id.toString() === params.id)
+          if (index >= 0) {
+              ops[index] = opActualizada
+              localStorage.setItem('operaciones', JSON.stringify(ops))
+          }
+          
+          setOperacion(opActualizada)
+          setSubiendo(false)
+          // Limpiamos el input para poder subir el mismo archivo si es necesario
+          if (fileInputRef.current) fileInputRef.current.value = ''
+      }, 1000)
+  }
+
+  const eliminarDoc = (docId: number) => {
+      if(!confirm('¿Borrar documento?')) return
+      const nuevosDocs = operacion.documentos.filter((d:any) => d.id !== docId)
+      const opActualizada = { ...operacion, documentos: nuevosDocs }
+      setOperacion(opActualizada)
+      const ops = JSON.parse(localStorage.getItem('operaciones') || '[]')
+      const index = ops.findIndex((o:any) => o.id.toString() === params.id)
+      if (index >= 0) { ops[index] = opActualizada; localStorage.setItem('operaciones', JSON.stringify(ops)) }
+  }
+
   const calcularTributos = () => {
     const fob = parseFloat(valoresCalc.fob) || 0
     const flete = parseFloat(valoresCalc.flete) || 0
@@ -106,68 +171,6 @@ export default function DetalleOperacion() {
     setMostrarCalculadora(false)
   }
 
-  // --- NUEVA LÓGICA DE SUBIDA REAL ---
-  const iniciarCargaReal = (tipo: string) => {
-      setTipoDocActual(tipo)
-      // Hacemos click programático en el input oculto
-      fileInputRef.current?.click()
-  }
-
-  const procesarArchivoReal = (e: any) => {
-      const file = e.target.files[0]
-      if (!file) return
-
-      // Simulamos la barrita de carga para darle emoción
-      setSubiendo(true)
-      setProgresoCarga(0)
-      
-      const intervalo = setInterval(() => {
-          setProgresoCarga((prev) => {
-              if (prev >= 100) {
-                  clearInterval(intervalo)
-                  return 100
-              }
-              return prev + 25 // Carga más rápido
-          })
-      }, 150)
-
-      setTimeout(() => {
-          // Guardamos el NOMBRE REAL del archivo
-          const nuevoDoc = { 
-              id: Date.now(), 
-              nombre: file.name, // <-- AQUÍ ESTÁ LA MAGIA (Nombre real)
-              tipo: tipoDocActual, 
-              fecha: new Date().toLocaleDateString(), 
-              usuario: 'Majo' 
-          }
-          
-          const nuevosDocs = [...(operacion.documentos || []), nuevoDoc]
-          const opActualizada = { ...operacion, documentos: nuevosDocs }
-          
-          const ops = JSON.parse(localStorage.getItem('operaciones') || '[]')
-          const index = ops.findIndex((o:any) => o.id.toString() === params.id)
-          if (index >= 0) { 
-              ops[index] = opActualizada
-              localStorage.setItem('operaciones', JSON.stringify(ops)) 
-          }
-          
-          setOperacion(opActualizada)
-          setSubiendo(false)
-          // Limpiamos el input para poder subir el mismo archivo de nuevo si se quiere
-          if (fileInputRef.current) fileInputRef.current.value = ''
-      }, 1000)
-  }
-
-  const eliminarDoc = (docId: number) => {
-      if(!confirm('¿Borrar documento?')) return
-      const nuevosDocs = operacion.documentos.filter((d:any) => d.id !== docId)
-      const opActualizada = { ...operacion, documentos: nuevosDocs }
-      setOperacion(opActualizada)
-      const ops = JSON.parse(localStorage.getItem('operaciones') || '[]')
-      const index = ops.findIndex((o:any) => o.id.toString() === params.id)
-      if (index >= 0) { ops[index] = opActualizada; localStorage.setItem('operaciones', JSON.stringify(ops)) }
-  }
-
   const toggleTarea = (idx: number) => {
     if (!operacion.checklist) return;
     const nuevoChecklist = [...operacion.checklist];
@@ -183,6 +186,7 @@ export default function DetalleOperacion() {
 
   if (!operacion) return <div className="p-12 text-center text-black font-bold">Cargando operación...</div>
 
+  // VISTA PRESUPUESTO
   if (mostrarPresupuesto) {
     return (
         <div className="min-h-screen bg-slate-100 p-8 flex justify-center">
@@ -200,6 +204,7 @@ export default function DetalleOperacion() {
                         <div className="text-xl font-bold text-black">#{operacion.id.toString().slice(-6)}</div>
                     </div>
                 </div>
+                {/* ... (Resto del presupuesto igual) ... */}
                 <div className="mb-10 bg-slate-50 p-6 rounded border border-slate-200">
                     <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Cliente</h3>
                     <div className="text-2xl font-bold text-black">{operacion.cliente}</div>
@@ -227,6 +232,7 @@ export default function DetalleOperacion() {
     )
   }
 
+  // VISTA NORMAL
   return (
     <>
       <Navbar />
@@ -291,30 +297,43 @@ export default function DetalleOperacion() {
 
                     <div className="grid grid-cols-2 gap-2 mb-4">
                         {['Factura', 'Packing', 'Origen', 'B/L'].map((doc) => (
-                            <button key={doc} disabled={subiendo} onClick={() => iniciarCargaReal(doc)} 
-                                className="text-xs bg-slate-100 text-black py-2 rounded border border-slate-300 font-bold hover:bg-slate-200">
+                            <button key={doc} disabled={subiendo} onClick={() => abrirSelectorArchivos(doc)} 
+                                className="text-xs bg-slate-100 text-black py-2 rounded border border-slate-300 font-bold hover:bg-slate-200 hover:border-slate-400 transition-all">
                                 + {doc}
                             </button>
                         ))}
                     </div>
+
                     {subiendo && (
-                        <div className="mb-2">
+                        <div className="mb-3">
+                            <div className="flex justify-between text-xs text-black font-bold mb-1">
+                                <span>Subiendo...</span>
+                                <span>{progresoCarga}%</span>
+                            </div>
                             <div className="w-full bg-slate-200 rounded-full h-2">
                                 <div className="bg-blue-600 h-2 rounded-full transition-all duration-300" style={{width: `${progresoCarga}%`}}></div>
                             </div>
-                            <div className="text-xs text-center mt-1 font-bold text-black">Subiendo...</div>
                         </div>
                     )}
+
                     <div className="space-y-2">
                         {operacion.documentos?.map((doc: any) => (
-                            <div key={doc.id} className="flex justify-between p-2 bg-slate-50 border border-slate-200 text-xs text-black font-medium items-center">
-                                <div className="truncate flex-1">
-                                    <span className="mr-2">📄</span>
-                                    <span title={doc.nombre}>{doc.nombre}</span>
+                            <div key={doc.id} className="flex justify-between items-center p-2 bg-slate-50 border border-slate-200 text-xs text-black font-medium rounded hover:border-purple-300 transition-colors">
+                                <div className="truncate flex-1 flex items-center gap-2">
+                                    <span className="text-lg">📄</span>
+                                    <div className="flex flex-col truncate">
+                                        <span className="truncate" title={doc.nombre}>{doc.nombre}</span>
+                                        <span className="text-[10px] text-slate-500 uppercase">{doc.tipo}</span>
+                                    </div>
                                 </div>
-                                <button onClick={() => eliminarDoc(doc.id)} className="text-red-500 font-bold ml-2">✕</button>
+                                <button onClick={() => eliminarDoc(doc.id)} className="text-red-500 hover:bg-red-50 p-1 rounded font-bold">✕</button>
                             </div>
                         ))}
+                        {(!operacion.documentos || operacion.documentos.length === 0) && (
+                            <div className="text-center py-4 text-slate-400 text-xs italic">
+                                Sin documentos adjuntos
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -340,7 +359,8 @@ export default function DetalleOperacion() {
             </div>
           </div>
         </div>
-
+        
+        {/* MODAL CALCULADORA (Igual que antes) */}
         {mostrarCalculadora && (
           <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto border border-slate-300">
@@ -367,6 +387,11 @@ export default function DetalleOperacion() {
                             <input type="number" value={valoresCalc.seguro} onChange={(e) => setValoresCalc({...valoresCalc, seguro: e.target.value})} 
                                 className="w-full border-2 border-slate-400 p-2.5 rounded text-black font-bold" />
                         </div>
+                        <div>
+                             <label className="text-xs font-bold text-black mb-1 block">Tipo Cambio ($)</label>
+                             <input type="number" value={valoresCalc.tipoCambio} onChange={(e) => setValoresCalc({...valoresCalc, tipoCambio: e.target.value})} 
+                                 className="w-full border-2 border-yellow-400 bg-yellow-50 p-2.5 rounded text-black font-bold" />
+                         </div>
                     </div>
                     <div className="space-y-4">
                         <h3 className="font-bold text-xs text-purple-800 uppercase border-b border-purple-200 pb-1">Tasas (%)</h3>
@@ -392,7 +417,8 @@ export default function DetalleOperacion() {
                         <div className="flex justify-between items-end font-bold text-xl text-black mb-1">
                             <span>Total USD:</span><span>{formatNumber(resultadoCalc.totalAPagar)}</span>
                         </div>
-                        <button onClick={guardarTributos} className="w-full mt-4 bg-green-700 text-white py-3 rounded-lg font-bold">
+                        <div className="text-right text-xs text-slate-500 mb-3">Est. en Pesos: $ {resultadoCalc.enPesos?.toLocaleString('es-AR')}</div>
+                        <button onClick={guardarTributos} className="w-full mt-2 bg-green-700 text-white py-3 rounded-lg font-bold">
                             ✓ Confirmar y Guardar
                         </button>
                     </div>
