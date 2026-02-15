@@ -22,85 +22,84 @@ export default function Nomenclador() {
           <div className="mb-8 text-center">
             <h1 className="text-3xl font-bold text-slate-900 mb-2">Nomenclador Arancelario</h1>
             <p className="text-slate-600">
-                Herramienta de clasificación y consulta de tributos.
+                Acceso directo a las bases oficiales de clasificación y tributos.
             </p>
           </div>
 
-          {/* --- SECCIÓN 1: ACCESOS DIRECTOS A FUENTES OFICIALES (NUEVO) --- */}
+          {/* --- SECCIÓN 1: BASES DE DATOS EXTERNAS (ACTUALIZADO CON TUS LINKS) --- */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
               
-              {/* TARJETA 1: VUCE / CICE (Oficial y Gratuito) */}
+              {/* TARJETA 1: SIM / ARANCEL INTEGRADO (La más importante) */}
+              <a 
+                href="https://serviciosweb.afip.gob.ar/aduana/arancelintegrado/default.asp" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-blue-500 transition-all group"
+              >
+                  <div className="flex items-center justify-between mb-4">
+                      <div className="h-10 w-10 bg-blue-100 rounded-lg flex items-center justify-center text-xl">🏛️</div>
+                      <span className="text-xs font-bold text-blue-700 bg-blue-50 px-2 py-1 rounded">SISTEMA MALVINA</span>
+                  </div>
+                  <h3 className="font-bold text-slate-900 text-lg group-hover:text-blue-700">Consulta Arancel Integrado</h3>
+                  <p className="text-sm text-slate-500 mt-2">
+                      Base oficial de AFIP. Consultá Derechos de Importación, Tasas, IVA y Reintegros vigentes hoy.
+                  </p>
+                  <div className="mt-4 text-sm font-bold text-blue-600 flex items-center gap-1">
+                      Entrar al SIM Online →
+                  </div>
+              </a>
+
+              {/* TARJETA 2: MERCOSUR (Estructura y Notas) */}
+              <a 
+                href="https://www.mercosur.int/politica-comercial/nomenclatura-comun-ncm-y-arancel-externo-comun-aec" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-green-500 transition-all group"
+              >
+                  <div className="flex items-center justify-between mb-4">
+                      <div className="h-10 w-10 bg-green-100 rounded-lg flex items-center justify-center text-xl">🌍</div>
+                      <span className="text-xs font-bold text-green-700 bg-green-50 px-2 py-1 rounded">NCM / AEC</span>
+                  </div>
+                  <h3 className="font-bold text-slate-900 text-lg group-hover:text-green-700">Nomenclatura Mercosur</h3>
+                  <p className="text-sm text-slate-500 mt-2">
+                      Ideal para clasificar. Visualizá el árbol completo, notas de sección y Arancel Externo Común.
+                  </p>
+                  <div className="mt-4 text-sm font-bold text-green-600 flex items-center gap-1">
+                      Ver Árbol Mercosur →
+                  </div>
+              </a>
+
+              {/* TARJETA 3: VUCE (Intervenciones) */}
               <a 
                 href="https://www.vuce.gob.ar/central-informacion-cice" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-blue-400 transition-all group"
+                className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-orange-400 transition-all group"
               >
                   <div className="flex items-center justify-between mb-4">
-                      <div className="h-10 w-10 bg-blue-100 rounded-lg flex items-center justify-center text-xl">🇦🇷</div>
-                      <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">OFICIAL</span>
+                      <div className="h-10 w-10 bg-orange-100 rounded-lg flex items-center justify-center text-xl">🚧</div>
+                      <span className="text-xs font-bold text-orange-700 bg-orange-50 px-2 py-1 rounded">PROHIBICIONES</span>
                   </div>
-                  <h3 className="font-bold text-slate-900 text-lg group-hover:text-blue-700">Central VUCE (CICE)</h3>
+                  <h3 className="font-bold text-slate-900 text-lg group-hover:text-orange-700">Central VUCE (CICE)</h3>
                   <p className="text-sm text-slate-500 mt-2">
-                      Consulta oficial de posiciones, intervenciones y prohibiciones actualizada por el Estado.
+                      Chequeá intervenciones de terceros organismos (ANMAT, Seguridad Eléctrica, SENASA).
                   </p>
-                  <div className="mt-4 text-sm font-bold text-blue-600 flex items-center gap-1">
-                      Ir a VUCE →
-                  </div>
-              </a>
-
-              {/* TARJETA 2: TARIFAR (El estándar de la industria) */}
-              <a 
-                href="https://www.tarifar.com/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-red-400 transition-all group"
-              >
-                  <div className="flex items-center justify-between mb-4">
-                      <div className="h-10 w-10 bg-red-100 rounded-lg flex items-center justify-center text-xl">📕</div>
-                      <span className="text-xs font-bold text-slate-600 bg-slate-100 px-2 py-1 rounded">PRIVADO</span>
-                  </div>
-                  <h3 className="font-bold text-slate-900 text-lg group-hover:text-red-700">TARIFAR</h3>
-                  <p className="text-sm text-slate-500 mt-2">
-                      Base de datos líder para despachantes. Requiere suscripción para ver detalles completos.
-                  </p>
-                  <div className="mt-4 text-sm font-bold text-red-600 flex items-center gap-1">
-                      Ir a Tarifar →
-                  </div>
-              </a>
-
-              {/* TARJETA 3: NOMENCLADOR COMÚN MERCOSUR (Info técnica) */}
-              <a 
-                href="https://www.afip.gob.ar/nomenclador/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-green-400 transition-all group"
-              >
-                  <div className="flex items-center justify-between mb-4">
-                      <div className="h-10 w-10 bg-green-100 rounded-lg flex items-center justify-center text-xl">🌍</div>
-                      <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded">MERCOSUR</span>
-                  </div>
-                  <h3 className="font-bold text-slate-900 text-lg group-hover:text-green-700">NCM Online</h3>
-                  <p className="text-sm text-slate-500 mt-2">
-                      Estructura del árbol arancelario y notas explicativas del sistema armonizado.
-                  </p>
-                  <div className="mt-4 text-sm font-bold text-green-600 flex items-center gap-1">
-                      Ver Árbol NCM →
+                  <div className="mt-4 text-sm font-bold text-orange-600 flex items-center gap-1">
+                      Consultar VUCE →
                   </div>
               </a>
           </div>
 
-          {/* --- SECCIÓN 2: TUS APUNTES INTERNOS (El buscador que ya tenías) --- */}
+          {/* --- SECCIÓN 2: TUS APUNTES INTERNOS (Sigue igual) --- */}
           <div className="border-t border-slate-200 pt-8">
             <h2 className="text-xl font-bold text-slate-800 mb-6">📂 Mis Clasificaciones Guardadas</h2>
             
-            {/* BUSCADOR */}
             <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-300 mb-6 max-w-2xl">
                 <div className="relative">
                     <span className="absolute left-4 top-3 text-slate-400">🔍</span>
                     <input 
                         type="text" 
-                        placeholder="Buscar en mis productos frecuentes..."
+                        placeholder="Buscar en mis productos frecuentes (ej: tablet)..."
                         className="w-full pl-10 pr-4 py-2 rounded-lg border-none focus:ring-0 text-slate-900 outline-none"
                         value={busqueda}
                         onChange={(e) => setBusqueda(e.target.value)}
@@ -108,7 +107,6 @@ export default function Nomenclador() {
                 </div>
             </div>
 
-            {/* TABLA INTERNA */}
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <table className="w-full text-left border-collapse">
                     <thead>
@@ -140,14 +138,14 @@ export default function Nomenclador() {
                                         </div>
                                     </td>
                                     <td className="p-4 text-center">
-                                        <button onClick={() => alert(`NCM ${item.codigo} copiado al portapapeles`)} className="text-slate-500 hover:text-purple-600 font-bold text-xs">
+                                        <button onClick={() => alert(`NCM ${item.codigo} copiado`)} className="text-slate-500 hover:text-purple-600 font-bold text-xs">
                                             COPIAR
                                         </button>
                                     </td>
                                 </tr>
                             ))
                         ) : (
-                            <tr><td colSpan={6} className="p-8 text-center text-slate-400 italic">Sin resultados internos. Probá en los botones externos de arriba.</td></tr>
+                            <tr><td colSpan={6} className="p-8 text-center text-slate-400 italic">Sin resultados internos. Usá los botones de arriba 👆</td></tr>
                         )}
                     </tbody>
                 </table>
