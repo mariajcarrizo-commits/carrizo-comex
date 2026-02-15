@@ -122,7 +122,8 @@ export default function NuevaOperacion() {
                   Tipo de Operación
                 </h2>
                 
-                <div className="grid grid-cols-2 gap-4">
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4"> 
+</div>
                   <button
                     onClick={() => setFormData({...formData, tipo: 'Importación'})}
                     className={`p-6 rounded-lg border-2 transition-all text-left ${
@@ -198,7 +199,7 @@ export default function NuevaOperacion() {
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-bold text-black mb-2">País Origen/Destino</label>
                       <select
