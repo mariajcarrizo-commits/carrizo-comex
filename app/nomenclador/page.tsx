@@ -22,14 +22,14 @@ export default function Nomenclador() {
           <div className="mb-8 text-center">
             <h1 className="text-3xl font-bold text-slate-900 mb-2">Nomenclador Arancelario</h1>
             <p className="text-slate-600">
-                Acceso directo a las bases oficiales de clasificación y tributos.
+                Acceso directo a las bases oficiales y privadas de clasificación.
             </p>
           </div>
 
-          {/* --- SECCIÓN 1: BASES DE DATOS EXTERNAS (ACTUALIZADO CON TUS LINKS) --- */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          {/* --- SECCIÓN 1: ACCESOS DIRECTOS (GRID 2x2) --- */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
               
-              {/* TARJETA 1: SIM / ARANCEL INTEGRADO (La más importante) */}
+              {/* TARJETA 1: SIM / ARANCEL INTEGRADO (AFIP) */}
               <a 
                 href="https://serviciosweb.afip.gob.ar/aduana/arancelintegrado/default.asp" 
                 target="_blank" 
@@ -49,7 +49,27 @@ export default function Nomenclador() {
                   </div>
               </a>
 
-              {/* TARJETA 2: MERCOSUR (Estructura y Notas) */}
+              {/* TARJETA 2: TARIFAR (La Clave) */}
+              <a 
+                href="https://www.tarifar.com/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-red-500 transition-all group"
+              >
+                  <div className="flex items-center justify-between mb-4">
+                      <div className="h-10 w-10 bg-red-100 rounded-lg flex items-center justify-center text-xl">📕</div>
+                      <span className="text-xs font-bold text-red-700 bg-red-50 px-2 py-1 rounded">PRIVADO / LÍDER</span>
+                  </div>
+                  <h3 className="font-bold text-slate-900 text-lg group-hover:text-red-700">TARIFAR</h3>
+                  <p className="text-sm text-slate-500 mt-2">
+                      El buscador más potente del mercado. Normativa, jurisprudencia y clasificación inteligente.
+                  </p>
+                  <div className="mt-4 text-sm font-bold text-red-600 flex items-center gap-1">
+                      Ir a Tarifar →
+                  </div>
+              </a>
+
+              {/* TARJETA 3: MERCOSUR (Estructura) */}
               <a 
                 href="https://www.mercosur.int/politica-comercial/nomenclatura-comun-ncm-y-arancel-externo-comun-aec" 
                 target="_blank" 
@@ -62,14 +82,14 @@ export default function Nomenclador() {
                   </div>
                   <h3 className="font-bold text-slate-900 text-lg group-hover:text-green-700">Nomenclatura Mercosur</h3>
                   <p className="text-sm text-slate-500 mt-2">
-                      Ideal para clasificar. Visualizá el árbol completo, notas de sección y Arancel Externo Común.
+                      Visualizá el árbol completo, notas de sección y Arancel Externo Común.
                   </p>
                   <div className="mt-4 text-sm font-bold text-green-600 flex items-center gap-1">
                       Ver Árbol Mercosur →
                   </div>
               </a>
 
-              {/* TARJETA 3: VUCE (Intervenciones) */}
+              {/* TARJETA 4: VUCE (Intervenciones) */}
               <a 
                 href="https://www.vuce.gob.ar/central-informacion-cice" 
                 target="_blank" 
@@ -78,9 +98,9 @@ export default function Nomenclador() {
               >
                   <div className="flex items-center justify-between mb-4">
                       <div className="h-10 w-10 bg-orange-100 rounded-lg flex items-center justify-center text-xl">🚧</div>
-                      <span className="text-xs font-bold text-orange-700 bg-orange-50 px-2 py-1 rounded">PROHIBICIONES</span>
+                      <span className="text-xs font-bold text-orange-700 bg-orange-50 px-2 py-1 rounded">VUCE / CICE</span>
                   </div>
-                  <h3 className="font-bold text-slate-900 text-lg group-hover:text-orange-700">Central VUCE (CICE)</h3>
+                  <h3 className="font-bold text-slate-900 text-lg group-hover:text-orange-700">Central de Prohibiciones</h3>
                   <p className="text-sm text-slate-500 mt-2">
                       Chequeá intervenciones de terceros organismos (ANMAT, Seguridad Eléctrica, SENASA).
                   </p>
